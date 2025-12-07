@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Dingo Marketing AI Agent 演示脚本
-快速展示系统的主要功能和使用场景
+Dingo Marketing AI Agent Demonstration Script
+Quickly demonstrates the system's main features and use cases
 """
 
 import requests
@@ -9,40 +9,41 @@ import json
 import time
 from typing import Dict, Any
 
-# API 基础配置
-BASE_URL = "http://127.0.0.1:8000/api/v1"
+# API Basic Configuration - CORRECTED PORT from 8000 to 8080
+BASE_URL = "http://127.0.0.1:8080/api/v1"
 HEADERS = {"Content-Type": "application/json"}
 
 def print_section(title: str):
-    """打印章节标题"""
+    """Prints the section title"""
     print(f"\n{'='*60}")
     print(f"🎯 {title}")
     print(f"{'='*60}")
 
-def print_response(response: requests.Response, title: str = "响应结果"):
-    """格式化打印API响应"""
+def print_response(response: requests.Response, title: str = "Response Result"):
+    """Formats and prints the API response"""
     print(f"\n📊 {title}:")
-    print(f"状态码: {response.status_code}")
+    print(f"Status Code: {response.status_code}")
     if response.status_code == 200:
         try:
+            # ensure_ascii=False keeps non-English characters readable
             data = response.json()
             print(json.dumps(data, indent=2, ensure_ascii=False))
         except:
             print(response.text)
     else:
-        print(f"错误: {response.text}")
+        print(f"Error: {response.text}")
 
 def demo_scenario_1():
-    """场景1: 用户分析 - 分析知名开发者"""
-    print_section("场景1: 分析知名GitHub用户")
+    """Scenario 1: User Analysis - Analyze Prominent Developers"""
+    print_section("Scenario 1: Analyze Prominent GitHub Users")
     
-    print("📝 场景描述:")
-    print("- 分析几个知名的GitHub用户")
-    print("- 了解他们的技术背景和社区影响力")
-    print("- 制定个性化的互动策略")
+    print("📝 Scenario Description:")
+    print("- Analyze a few well-known GitHub users")
+    print("- Understand their technical background and community influence")
+    print("- Develop personalized interaction strategies")
     
-    # 中文分析
-    print("\n🔍 执行中文用户分析...")
+    # Chinese Analysis
+    print("\n🔍 Executing Chinese user analysis...")
     payload = {
         "user_list": ["octocat", "defunkt"],
         "analysis_depth": "basic",
@@ -52,14 +53,14 @@ def demo_scenario_1():
     response = requests.post(f"{BASE_URL}/analyze/users", 
                            headers=HEADERS, 
                            data=json.dumps(payload))
-    print_response(response, "中文分析结果")
+    print_response(response, "Chinese Analysis Result")
     
     time.sleep(2)
     
-    # 英文分析
-    print("\n🔍 执行英文用户分析...")
+    # English Analysis
+    print("\n🔍 Executing English user analysis...")
     payload["language"] = "en"
-    payload["user_list"] = ["gvanrossum"]  # Python之父
+    payload["user_list"] = ["gvanrossum"]  # Creator of Python
     
     response = requests.post(f"{BASE_URL}/analyze/users", 
                            headers=HEADERS, 
@@ -67,40 +68,40 @@ def demo_scenario_1():
     print_response(response, "English Analysis Result")
 
 def demo_scenario_2():
-    """场景2: 内容营销活动"""
-    print_section("场景2: 创建内容营销活动")
+    """Scenario 2: Content Marketing Campaign"""
+    print_section("Scenario 2: Create a Content Marketing Campaign")
     
-    print("📝 场景描述:")
-    print("- 为Dingo项目创建技术博客内容")
-    print("- 针对开发者群体制定内容策略")
-    print("- 生成多种类型的营销材料")
+    print("📝 Scenario Description:")
+    print("- Create technical blog content for the Dingo project")
+    print("- Develop a content strategy for the developer community")
+    print("- Generate various types of marketing materials")
     
-    print("\n📝 创建内容营销活动...")
+    print("\n📝 Creating content marketing campaign...")
     payload = {
-        "name": "Dingo数据质量工具推广",
-        "target_audience": "Python开发者和数据工程师",
-        "topics": ["数据质量评估", "Python数据工具", "开源项目贡献"],
+        "name": "Dingo Data Quality Tool Promotion",
+        "target_audience": "Python Developers and Data Engineers",
+        "topics": ["Data Quality Assessment", "Python Data Tools", "Open Source Project Contributions"],
         "content_types": ["blog", "social", "tutorial"],
-        "duration": "2周",
-        "keywords": ["数据质量", "Python", "开源", "数据验证"],
+        "duration": "2 Weeks",
+        "keywords": ["Data Quality", "Python", "Open Source", "Data Validation"],
         "language": "zh"
     }
     
     response = requests.post(f"{BASE_URL}/campaigns/content", 
                            headers=HEADERS, 
                            data=json.dumps(payload))
-    print_response(response, "内容营销活动结果")
+    print_response(response, "Content Marketing Campaign Result")
 
 def demo_scenario_3():
-    """场景3: 社区互动"""
-    print_section("场景3: 执行社区互动活动")
+    """Scenario 3: Community Engagement"""
+    print_section("Scenario 3: Execute Community Engagement Activity")
     
-    print("📝 场景描述:")
-    print("- 分析目标项目的GitHub社区状态")
-    print("- 与活跃用户进行互动")
-    print("- 建立长期的社区关系")
+    print("📝 Scenario Description:")
+    print("- Analyze the status of the target project's GitHub community")
+    print("- Interact with active users")
+    print("- Establish long-term community relationships")
     
-    print("\n🤝 执行社区互动...")
+    print("\n🤝 Executing community engagement...")
     payload = {
         "interaction_types": ["comment", "issue"],
         "target_count": 5,
@@ -111,38 +112,38 @@ def demo_scenario_3():
     response = requests.post(f"{BASE_URL}/engagement/community", 
                            headers=HEADERS, 
                            data=json.dumps(payload))
-    print_response(response, "社区互动结果")
+    print_response(response, "Community Engagement Result")
 
 def demo_scenario_4():
-    """场景4: 内容生成"""
-    print_section("场景4: AI内容生成")
+    """Scenario 4: AI Content Generation"""
+    print_section("Scenario 4: AI Content Generation")
     
-    print("📝 场景描述:")
-    print("- 使用AI生成技术博客文章")
-    print("- 创建社交媒体内容")
-    print("- 支持中英文内容生成")
+    print("📝 Scenario Description:")
+    print("- Use AI to generate technical blog articles")
+    print("- Create social media content")
+    print("- Supports Chinese and English content generation")
     
-    # 中文博客生成
-    print("\n✍️ 生成中文技术博客...")
+    # Chinese Blog Generation
+    print("\n✍️ Generating Chinese technical blog...")
     payload = {
         "content_type": "blog",
-        "topic": "如何使用Dingo提升数据质量",
-        "target_audience": "数据工程师",
+        "topic": "How to use Dingo to improve data quality",
+        "target_audience": "Data Engineers",
         "tone": "professional",
         "length": "medium",
         "language": "zh",
-        "keywords": ["数据质量", "Dingo", "最佳实践"]
+        "keywords": ["Data Quality", "Dingo", "Best Practices"]
     }
     
     response = requests.post(f"{BASE_URL}/content/generate", 
                            headers=HEADERS, 
                            data=json.dumps(payload))
-    print_response(response, "中文博客生成结果")
+    print_response(response, "Chinese Blog Generation Result")
     
     time.sleep(2)
     
-    # 英文社交媒体内容
-    print("\n📱 生成英文社交媒体内容...")
+    # English Social Media Content
+    print("\n📱 Generating English social media content...")
     payload.update({
         "content_type": "social",
         "topic": "Introducing Dingo: A Python Data Quality Tool",
@@ -157,48 +158,48 @@ def demo_scenario_4():
     print_response(response, "English Social Media Content")
 
 def demo_scenario_5():
-    """场景5: 系统状态和配置"""
-    print_section("场景5: 系统状态检查和配置")
+    """Scenario 5: System Status and Configuration"""
+    print_section("Scenario 5: System Status Check and Configuration")
     
-    print("📝 场景描述:")
-    print("- 检查系统运行状态")
-    print("- 查看和配置目标仓库")
-    print("- 了解可用的工具和Agent")
+    print("📝 Scenario Description:")
+    print("- Check system operating status")
+    print("- View and configure the target repository")
+    print("- Understand available tools and Agents")
     
-    # 系统状态
-    print("\n🔍 检查系统状态...")
+    # System Status
+    print("\n🔍 Checking system status...")
     response = requests.get(f"{BASE_URL}/status")
-    print_response(response, "系统状态")
+    print_response(response, "System Status")
     
     time.sleep(1)
     
-    # 当前仓库配置
-    print("\n📂 查看当前目标仓库...")
+    # Current Repository Configuration
+    print("\n📂 Viewing current target repository...")
     response = requests.get(f"{BASE_URL}/repository")
-    print_response(response, "当前仓库配置")
+    print_response(response, "Current Repository Configuration")
     
     time.sleep(1)
     
-    # 工具状态
-    print("\n🛠️ 查看工具状态...")
+    # Tool Status
+    print("\n🛠️ Viewing tool status...")
     response = requests.get(f"{BASE_URL}/tools/status")
-    print_response(response, "工具状态")
+    print_response(response, "Tool Status")
 
 def demo_comprehensive():
-    """综合演示场景"""
-    print_section("综合演示: 完整营销工作流")
+    """Comprehensive Demonstration Scenario"""
+    print_section("Comprehensive Demo: Complete Marketing Workflow")
     
-    print("📝 场景描述:")
-    print("- 执行完整的营销工作流程")
-    print("- 包含用户分析、内容创作、社区互动等环节")
-    print("- 展示多Agent协作能力")
+    print("📝 Scenario Description:")
+    print("- Execute a complete marketing workflow")
+    print("- Includes user analysis, content creation, community engagement, etc.")
+    print("- Demonstrate multi-Agent collaboration capabilities")
     
-    print("\n🚀 启动综合营销活动...")
+    print("\n🚀 Launching comprehensive marketing campaign...")
     payload = {
-        "name": "Dingo项目推广计划",
-        "objectives": ["提高项目知名度", "吸引贡献者", "建立技术社区"],
-        "target_audience": "Python开发者和数据科学家",
-        "duration": "1个月",
+        "name": "Dingo Project Promotion Plan",
+        "objectives": ["Increase Project Visibility", "Attract Contributors", "Establish Technical Community"],
+        "target_audience": "Python Developers and Data Scientists",
+        "duration": "1 Month",
         "budget_level": "medium",
         "priority_channels": ["github", "social", "blog"],
         "language": "zh"
@@ -207,50 +208,50 @@ def demo_comprehensive():
     response = requests.post(f"{BASE_URL}/campaigns/comprehensive", 
                            headers=HEADERS, 
                            data=json.dumps(payload))
-    print_response(response, "综合营销活动结果")
+    print_response(response, "Comprehensive Marketing Campaign Result")
 
 def main():
-    """主演示函数"""
-    print("🎉 欢迎使用 Dingo Marketing AI Agent 系统!")
-    print("本演示将展示系统的主要功能和使用场景")
+    """Main Demonstration Function"""
+    print("🎉 Welcome to the Dingo Marketing AI Agent System!")
+    print("This demonstration will showcase the system's main features and use cases")
     
     scenarios = [
-        ("用户分析", demo_scenario_1),
-        ("内容营销", demo_scenario_2),
-        ("社区互动", demo_scenario_3),
-        ("内容生成", demo_scenario_4),
-        ("系统状态", demo_scenario_5),
-        ("综合演示", demo_comprehensive)
+        ("User Analysis", demo_scenario_1),
+        ("Content Marketing", demo_scenario_2),
+        ("Community Engagement", demo_scenario_3),
+        ("Content Generation", demo_scenario_4),
+        ("System Status", demo_scenario_5),
+        ("Comprehensive Demo", demo_comprehensive)
     ]
     
-    print(f"\n📋 可用演示场景:")
+    print(f"\n📋 Available Demonstration Scenarios:")
     for i, (name, _) in enumerate(scenarios, 1):
         print(f"  {i}. {name}")
-    print(f"  0. 全部演示")
+    print(f"  0. All Demos")
     
     try:
-        choice = input(f"\n请选择要演示的场景 (0-{len(scenarios)}): ").strip()
+        choice = input(f"\n{len(scenarios)}). Please select the scenario to demonstrate (0-{len(scenarios)}): ").strip()
         
         if choice == "0":
-            # 全部演示
+            # All Demos
             for name, func in scenarios:
                 func()
-                input("\n按回车键继续下一个演示...")
+                input("\nPress Enter to continue to the next demo...")
         elif choice.isdigit() and 1 <= int(choice) <= len(scenarios):
-            # 单个演示
+            # Single Demo
             name, func = scenarios[int(choice) - 1]
             func()
         else:
-            print("❌ 无效选择")
+            print("❌ Invalid Choice")
             return
             
     except KeyboardInterrupt:
-        print("\n\n👋 演示已取消")
+        print("\n\n👋 Demonstration cancelled")
     except Exception as e:
-        print(f"\n❌ 演示过程中出现错误: {e}")
+        print(f"\n❌ Error occurred during the demonstration: {e}")
     
-    print(f"\n🎯 演示完成!")
-    print(f"💡 提示: 你可以查看API文档了解更多功能: http://127.0.0.1:8000/docs")
+    print(f"\n🎯 Demonstration complete!")
+    print(f"💡 Tip: You can view the API documentation for more features: http://127.0.0.1:8080/docs")
 
 if __name__ == "__main__":
-    main() 
+    main()

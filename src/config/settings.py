@@ -54,7 +54,14 @@ class Settings(BaseSettings):
     LINKEDIN_API_KEY: str = ""
     
     # CORS 配置
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
+    CORS_ORIGINS: List[str] = ["http://127.0.0.1:5500" ,"http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:3000","http://localhost:3000", "http://localhost:8080"]
     
     class Config:
         env_file = ".env"

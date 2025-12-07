@@ -1,4 +1,4 @@
-/* 全局样式 */
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -12,7 +12,7 @@ body {
     line-height: 1.6;
 }
 
-/* 导航栏 */
+/* Navigation Bar */
 .navbar {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -75,7 +75,7 @@ body {
     background: #047857;
 }
 
-/* 主要内容区域 */
+/* Main Content Area */
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -109,7 +109,7 @@ body {
     margin-right: auto;
 }
 
-/* 按钮样式 */
+/* Button Styles */
 .action-buttons {
     display: flex;
     gap: 1rem;
@@ -157,7 +157,7 @@ body {
     font-size: 1.1rem;
 }
 
-/* 功能卡片网格 */
+/* Feature Card Grid */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -243,7 +243,7 @@ body {
     color: #64748b;
 }
 
-/* 研究类型标签 */
+/* Research Type Tags */
 .research-types {
     display: flex;
     flex-wrap: wrap;
@@ -260,7 +260,7 @@ body {
     font-weight: 500;
 }
 
-/* 网络功能标签 */
+/* Network Feature Tags */
 .network-features {
     display: flex;
     flex-wrap: wrap;
@@ -277,7 +277,7 @@ body {
     font-weight: 500;
 }
 
-/* 市场调研功能详情 */
+/* Market Research Feature Details */
 .research-section {
     background: white;
     border-radius: 12px;
@@ -354,7 +354,7 @@ body {
     left: 0;
 }
 
-/* 快速开始 */
+/* Quick Start */
 .quick-start {
     text-align: center;
     padding: 2rem 0;
@@ -403,7 +403,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* 模态框样式 */
+/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -496,7 +496,7 @@ body {
     margin-top: 0.25rem;
 }
 
-/* 加载状态 */
+/* Loading State */
 .loading {
     display: inline-flex;
     align-items: center;
@@ -517,7 +517,7 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
         padding: 0 1rem;
@@ -567,7 +567,7 @@ body {
     }
 }
 
-/* 调研结果样式 */
+/* Research Result Styles */
 .research-content {
     background: #f8fafc;
     border: 1px solid #e2e8f0;

@@ -1,16 +1,16 @@
-// 全局变量
+// Global variables
 const API_BASE_URL = 'http://localhost:8000/api/v1';
 let currentModal = null;
 
-// DOM 加载完成后初始化
+// Initialize after DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     checkSystemStatus();
 });
 
-// 初始化事件监听器
+// Initialize event listeners
 function initializeEventListeners() {
-    // 功能卡片点击事件
+    // Feature card click event
     document.querySelectorAll('.feature-card').forEach(card => {
         card.addEventListener('click', function() {
             const cardType = this.dataset.type;
@@ -18,25 +18,25 @@ function initializeEventListeners() {
         });
     });
 
-    // 主要操作按钮
+    // Main action buttons
     document.getElementById('analyzeBtn').addEventListener('click', () => openModal('analyze'));
     document.getElementById('generateBtn').addEventListener('click', () => openModal('generate'));
     document.getElementById('communityBtn').addEventListener('click', () => openModal('community'));
     
-    // 新增市场调研按钮
+    // Add market research button
     const researchBtn = document.getElementById('researchBtn');
     if (researchBtn) {
         researchBtn.addEventListener('click', () => openModal('research'));
     }
 
-    // 模态框关闭事件
+    // Modal close event
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('close-btn')) {
             closeModal();
         }
     });
 
-    // ESC 键关闭模态框
+    // ESC key Close modal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && currentModal) {
             closeModal();
@@ -44,32 +44,32 @@ function initializeEventListeners() {
     });
 }
 
-// 检查系统状态
+// Check system status
 async function checkSystemStatus() {
     try {
         const response = await fetch(`${API_BASE_URL}/status`);
         const data = await response.json();
         
         if (data.status === 'operational' || data.status === 'healthy') {
-            updateStatusBadges('运行中');
+            updateStatusBadges('Operational');
         } else {
-            updateStatusBadges('离线');
+            updateStatusBadges('Offline');
         }
     } catch (error) {
-        console.error('系统状态检查失败:', error);
-        updateStatusBadges('离线');
+        console.error('System status check failed:', error);
+        updateStatusBadges('Offline');
     }
 }
 
-// 更新状态徽章
+// Update status badges
 function updateStatusBadges(status) {
     document.querySelectorAll('.status-badge').forEach(badge => {
         badge.textContent = status;
-        badge.className = status === '运行中' ? 'status-badge' : 'status-badge offline';
+        badge.className = status === 'Operational' ? 'status-badge' : 'status-badge offline';
     });
 }
 
-// 打开模态框
+// Open modal
 function openModal(type) {
     const modalContent = getModalContent(type);
     
@@ -90,20 +90,21 @@ function openModal(type) {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     currentModal = document.querySelector('.modal-overlay:last-child');
     
-    // 显示模态框
+    // Show modal
     setTimeout(() => {
         currentModal.style.opacity = '1';
         currentModal.style.visibility = 'visible';
     }, 10);
     
-    // 绑定表单提交事件
+    // Bind form submit event
     const form = currentModal.querySelector('form');
     if (form) {
+        console.log(form)
         form.addEventListener('submit', (e) => handleFormSubmit(e, type));
     }
 }
 
-// 关闭模态框
+// Close modal
 function closeModal() {
     if (currentModal) {
         currentModal.style.opacity = '0';
@@ -115,210 +116,226 @@ function closeModal() {
     }
 }
 
-// 获取模态框内容
+// Get modal content
 function getModalContent(type) {
     const contents = {
         analyze: {
-            title: '🔍 用户分析',
+            title: '🔍 User Analysis',
             body: `
                 <form id="analyzeForm">
                     <div class="form-group">
-                        <label class="form-label">GitHub 用户名</label>
-                        <input type="text" class="form-input" name="username" placeholder="例如: octocat" required>
-                        <div class="form-help">输入要分析的 GitHub 用户名</div>
+                        <label class="form-label">GitHub Username</label>
+                        <input type="text" class="form-input" name="username" placeholder="e.g.: octocat" required>
+                        <div class="form-help">Enter the GitHub username to analyze</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">分析深度</label>
+                        <label class="form-label">Analysis depth</label>
                         <select class="form-select" name="depth">
-                            <option value="basic">基础分析</option>
-                            <option value="deep">深度分析</option>
+                            <option value="basic">Basic Analysis</option>
+                            <option value="deep">Deep Analysis</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">报告语言</label>
+                        <label class="form-label">Report language</label>
                         <select class="form-select" name="language">
-                            <option value="zh">中文</option>
+                            <option value="zh">Chinese</option>
                             <option value="en">English</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <span class="btn-icon">🚀</span>
-                        开始分析
+                        Start Analysis
                     </button>
                 </form>
+                <div class="form-group">
+    <label class="form-label">Language</label>
+    <select class="form-select" name="language">
+        <option value="zh">Chinese</option>
+        <option value="en">English</option> // <--- MODIFY THIS
+    </select>
+</div>
+
+// TO THIS:
+<div class="form-group">
+    <label class="form-label">Language</label>
+    <select class="form-select" name="language">
+        <option value="zh">Chinese</option>
+        <option value="en" selected>English</option> // ADD 'selected'
+    </select>
+</div>
             `
         },
         generate: {
-            title: '✨ AI 内容生成',
+            title: '✨ AI Content Generation',
             body: `
                 <form id="generateForm">
                     <div class="form-group">
-                        <label class="form-label">内容类型</label>
+                        <label class="form-label">Content type</label>
                         <select class="form-select" name="content_type" required>
-                            <option value="">选择内容类型</option>
-                            <option value="blog_post">博客文章</option>
-                            <option value="social_media">社交媒体</option>
-                            <option value="email">邮件营销</option>
-                            <option value="documentation">技术文档</option>
+                            <option value="">Select Content type</option>
+                            <option value="blog_post">Blog Post</option>
+                            <option value="social_media">Social Media</option>
+                            <option value="email">Email Marketing</option>
+                            <option value="documentation">Technical Documentation</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">主题</label>
-                        <input type="text" class="form-input" name="topic" placeholder="例如: React 最佳实践" required>
+                        <label class="form-label">Topic</label>
+                        <input type="text" class="form-input" name="topic" placeholder="e.g.: React Best Practices" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">目标受众</label>
-                        <input type="text" class="form-input" name="target_audience" placeholder="例如: 前端开发者">
+                        <label class="form-label">Target audience</label>
+                        <input type="text" class="form-input" name="target_audience" placeholder="e.g.: Front-end Developers">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">关键词</label>
-                        <input type="text" class="form-input" name="keywords" placeholder="用逗号分隔，例如: React, 性能优化, 最佳实践">
+                        <label class="form-label">Keywords</label>
+                        <input type="text" class="form-input" name="keywords" placeholder="Separate by comma, e.g.: React, performance optimization, best practices">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">语言</label>
+                        <label class="form-label">Language</label>
                         <select class="form-select" name="language">
-                            <option value="zh">中文</option>
+                            <option value="zh">Chinese</option>
                             <option value="en">English</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <span class="btn-icon">✨</span>
-                        生成内容
+                        Generate content
                     </button>
                 </form>
             `
         },
         community: {
-            title: '🤝 社区互动',
+            title: '🤝 Community Interaction',
             body: `
                 <form id="communityForm">
                     <div class="form-group">
-                        <label class="form-label">目标仓库</label>
-                        <input type="text" class="form-input" name="repository" placeholder="例如: facebook/react" required>
-                        <div class="form-help">格式: owner/repo</div>
+                        <label class="form-label">Target repository</label>
+                        <input type="text" class="form-input" name="repository" placeholder="e.g.: facebook/react" required>
+                        <div class="form-help">Format: owner/repo</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">互动类型</label>
+                        <label class="form-label">Interaction type</label>
                         <select class="form-select" name="interaction_types" multiple>
-                            <option value="star">Star 项目</option>
-                            <option value="follow">关注用户</option>
-                            <option value="comment">评论互动</option>
-                            <option value="issue">创建 Issue</option>
+                            <option value="star">Star Project</option>
+                            <option value="follow">Follow User</option>
+                            <option value="comment">Comment Interaction</option>
+                            <option value="issue">Create Issue</option>
                         </select>
-                        <div class="form-help">按住 Ctrl/Cmd 可多选</div>
+                        <div class="form-help">Hold Ctrl/Cmd to select multiple</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">回溯天数</label>
+                        <label class="form-label">Lookback days</label>
                         <input type="number" class="form-input" name="lookback_days" value="30" min="1" max="365">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">语言</label>
+                        <label class="form-label">Language</label>
                         <select class="form-select" name="language">
-                            <option value="zh">中文</option>
+                            <option value="zh">Chinese</option>
                             <option value="en">English</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <span class="btn-icon">🤝</span>
-                        开始互动
+                        Start interaction
                     </button>
                 </form>
             `
         },
         campaign: {
-            title: '📈 营销活动',
+            title: '📈 Marketing Campaign',
             body: `
                 <form id="campaignForm">
                     <div class="form-group">
-                        <label class="form-label">活动名称</label>
-                        <input type="text" class="form-input" name="campaign_name" placeholder="例如: React 开发者推广活动" required>
+                        <label class="form-label">Campaign name</label>
+                        <input type="text" class="form-input" name="campaign_name" placeholder="e.g.: React Developer Promotion Campaign" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">目标受众</label>
-                        <textarea class="form-textarea" name="target_audience" placeholder="描述您的目标受众..."></textarea>
+                        <label class="form-label">Target audience</label>
+                        <textarea class="form-textarea" name="target_audience" placeholder="Describe your target audience..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">营销目标</label>
+                        <label class="form-label">Marketing goals</label>
                         <select class="form-select" name="goals" multiple>
-                            <option value="brand_awareness">品牌知名度</option>
-                            <option value="user_acquisition">用户获取</option>
-                            <option value="community_growth">社区增长</option>
-                            <option value="engagement">用户参与</option>
+                            <option value="brand_awareness">Brand Awareness</option>
+                            <option value="user_acquisition">User Acquisition</option>
+                            <option value="community_growth">Community Growth</option>
+                            <option value="engagement">User Engagement</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">预算范围</label>
+                        <label class="form-label">Budget range</label>
                         <select class="form-select" name="budget">
-                            <option value="low">低预算 (< $1000)</option>
-                            <option value="medium">中等预算 ($1000-$5000)</option>
-                            <option value="high">高预算 (> $5000)</option>
+                            <option value="low">Low Budget (< $1000)</option>
+                            <option value="medium">Medium Budget ($1000-$5000)</option>
+                            <option value="high">High Budget (> $5000)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">语言</label>
+                        <label class="form-label">Language</label>
                         <select class="form-select" name="language">
-                            <option value="zh">中文</option>
+                            <option value="zh">Chinese</option>
                             <option value="en">English</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <span class="btn-icon">📈</span>
-                        创建活动
+                        Create campaign
                     </button>
                 </form>
             `
         },
         research: {
-            title: '📊 市场调研',
+            title: '📊 Market Research',
             body: `
                 <form id="researchForm">
                     <div class="form-group">
-                        <label class="form-label">调研类型</label>
+                        <label class="form-label">Research type</label>
                         <select class="form-select" name="research_type" required>
-                            <option value="">选择调研类型</option>
-                            <option value="competitor">竞争对手分析</option>
-                            <option value="technology">技术趋势研究</option>
-                            <option value="market">市场趋势分析</option>
-                            <option value="user_feedback">用户反馈分析</option>
+                            <option value="">Select Research type</option>
+                            <option value="competitor">Competitor Analysis</option>
+                            <option value="technology">Technology Trend Research</option>
+                            <option value="market">Market Trend Analysis</option>
+                            <option value="user_feedback">User Feedback Analysis</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">调研目标</label>
-                        <input type="text" class="form-input" name="target" placeholder="例如: Great Expectations, 数据质量评估" required>
-                        <div class="form-help">输入要调研的具体目标或关键词</div>
+                        <label class="form-label">Research target</label>
+                        <input type="text" class="form-input" name="target" placeholder="e.g.: Great Expectations, Data Quality Assessment" required>
+                        <div class="form-help">Enter the specific target or Keywords for research</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">调研深度</label>
+                        <label class="form-label">Research depth</label>
                         <select class="form-select" name="depth">
-                            <option value="shallow">浅层调研 (快速)</option>
-                            <option value="medium">中等深度</option>
-                            <option value="deep">深度调研 (详细)</option>
+                            <option value="shallow">Shallow Research (Quick)</option>
+                            <option value="medium">Medium Depth</option>
+                            <option value="deep">Deep Research (Detailed)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">报告语言</label>
+                        <label class="form-label">Report language</label>
                         <select class="form-select" name="language">
-                            <option value="zh">中文</option>
+                            <option value="zh">Chinese</option>
                             <option value="en">English</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">附加要求 (可选)</label>
-                        <textarea class="form-textarea" name="requirements" placeholder="例如: 重点关注开源项目，包含价格对比等"></textarea>
+                        <label class="form-label">Additional requirements (Optional)</label>
+                        <textarea class="form-textarea" name="requirements" placeholder="e.g.: Focus on open source projects, include price comparison, etc."></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <span class="btn-icon">🔍</span>
-                        开始调研
+                        Start research
                     </button>
                 </form>
             `
         }
     };
     
-    return contents[type] || { title: '功能', body: '<p>功能开发中...</p>' };
+    return contents[type] || { title: 'Functionality', body: '<p>Functionality under development...</p>' };
 }
 
-// 处理表单提交
+// Handle form submit
 async function handleFormSubmit(e, type) {
     e.preventDefault();
     
@@ -326,21 +343,21 @@ async function handleFormSubmit(e, type) {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     
-    // 处理用户分析特殊字段映射
+    // Process special field mapping for User Analysis
     if (type === 'analyze') {
-        // 将username转换为user_list数组
+        // Convert username to user_list array
         if (data.username) {
             data.user_list = [data.username.trim()];
             delete data.username;
         }
-        // 将depth映射为analysis_depth
+        // Map depth to analysis_depth
         if (data.depth) {
             data.analysis_depth = data.depth;
             delete data.depth;
         }
     }
     
-    // 处理多选字段
+    // Process multi-select fields
     if (data.interaction_types) {
         data.interaction_types = formData.getAll('interaction_types');
     }
@@ -348,26 +365,26 @@ async function handleFormSubmit(e, type) {
         data.goals = formData.getAll('goals');
     }
     
-    // 处理关键词字段（转换为数组）
+    // Process Keywords field (convert to array)
     if (data.keywords && typeof data.keywords === 'string') {
         data.keywords = data.keywords.split(',').map(k => k.trim()).filter(k => k);
     }
     
-    // 显示加载状态
+    // Show loading state
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="loading"><span class="spinner"></span>处理中...</span>';
+    submitBtn.innerHTML = '<span class="loading"><span class="spinner"></span>Processing...</span>';
     submitBtn.disabled = true;
     
     try {
         const result = await callAPI(type, data);
-        // 先关闭当前的表单模态框
+        // First close the current form modal
         closeModal();
-        // 然后显示结果模态框
+        // Then show the results modal
         showResult(result, type);
     } catch (error) {
-        // 改进错误处理，确保显示正确的错误消息
-        let errorMessage = '操作失败';
+        // Improve error handling, ensuring the correct error message is displayed
+        let errorMessage = 'Operation failed';
         if (typeof error === 'string') {
             errorMessage = error;
         } else if (error && error.message) {
@@ -377,13 +394,13 @@ async function handleFormSubmit(e, type) {
         }
         showError(errorMessage);
     } finally {
-        // 恢复按钮状态
+        // Restore button state
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
 }
 
-// API 调用
+// API Call
 async function callAPI(type, data) {
     const endpoints = {
         analyze: '/github/analyze',
@@ -395,7 +412,7 @@ async function callAPI(type, data) {
     
     const endpoint = endpoints[type];
     if (!endpoint) {
-        throw new Error('未知的操作类型');
+        throw new Error('Unknown operation type');
     }
     
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -407,7 +424,7 @@ async function callAPI(type, data) {
     });
     
     if (!response.ok) {
-        let errorMessage = `请求失败: ${response.status}`;
+        let errorMessage = `Request failed: ${response.status}`;
         try {
             const errorData = await response.json();
             if (errorData.detail) {
@@ -418,7 +435,7 @@ async function callAPI(type, data) {
                 errorMessage = errorData;
             }
         } catch (parseError) {
-            // JSON 解析失败，使用默认错误消息
+            // JSON parsing failed, use default error message
             console.error('Error parsing response:', parseError);
         }
         throw new Error(errorMessage);
@@ -427,44 +444,44 @@ async function callAPI(type, data) {
     return await response.json();
 }
 
-// 显示结果
+// Show results
 function showResult(result, type) {
-    // 格式化结果内容
+    // Format result content
     let resultContent = '';
     
     if (type === 'research' && result.result) {
-        // 市场调研结果
+        // Market Research results
         resultContent = `
             <div class="result-summary">
-                <h4>📊 调研摘要</h4>
+                <h4>📊 Research Summary</h4>
                 <div class="summary-grid">
                     <div class="summary-item">
-                        <span class="label">调研ID:</span>
-                        <span class="value">${result.research_id || '未知'}</span>
+                        <span class="label">Research ID:</span>
+                        <span class="value">${result.research_id || 'Unknown'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">状态:</span>
-                        <span class="value status-${result.status}">${result.status === 'completed' ? '已完成' : result.status}</span>
+                        <span class="label">Status:</span>
+                        <span class="value status-${result.status}">${result.status === 'completed' ? 'Completed' : result.status}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">调研类型:</span>
-                        <span class="value">${result.research_type || '未知'}</span>
+                        <span class="label">Research type:</span>
+                        <span class="value">${result.research_type || 'Unknown'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">目标:</span>
-                        <span class="value">${result.target || '未知'}</span>
+                        <span class="label">Target:</span>
+                        <span class="value">${result.target || 'Unknown'}</span>
                     </div>
                 </div>
             </div>
             <div class="result-details">
-                <h4>📋 调研报告</h4>
+                <h4>📋 Research Report</h4>
                 <div class="research-content">
                     <pre>${result.result}</pre>
                 </div>
             </div>
             ${result.metadata ? `
                 <div class="result-details">
-                    <h4>📊 调研元数据</h4>
+                    <h4>📊 Research Metadata</h4>
                     <div class="metadata-content">
                         <pre>${JSON.stringify(result.metadata, null, 2)}</pre>
                     </div>
@@ -472,37 +489,37 @@ function showResult(result, type) {
             ` : ''}
         `;
     } else if (result.engagement_result) {
-        // 社区互动结果 - 优先检查，因为可能同时包含insights字段
+        // Community Interaction results - Check first, as it might also contain an insights field
         const engagement = result.engagement_result;
         const config = engagement.config || {};
-        // 处理嵌套的 engagement_result 结构
+        // Process nested engagement_result structure
         const engagementData = engagement.engagement_result || engagement;
         
         resultContent = `
             <div class="result-summary">
-                <h4>🤝 互动摘要</h4>
+                <h4>🤝 Engagement Summary</h4>
                 <div class="summary-grid">
                     <div class="summary-item">
-                        <span class="label">目标仓库:</span>
-                        <span class="value">${config.repository || '未知'}</span>
+                        <span class="label">Target repository:</span>
+                        <span class="value">${config.repository || 'Unknown'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">互动类型:</span>
-                        <span class="value">${config.interaction_types?.join(', ') || '未知'}</span>
+                        <span class="label">Interaction type:</span>
+                        <span class="value">${config.interaction_types?.join(', ') || 'Unknown'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">分析时间范围:</span>
-                        <span class="value">${config.lookback_days || 30} 天</span>
+                        <span class="label">Analysis time frame:</span>
+                        <span class="value">${config.lookback_days || 30} days</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">目标用户数:</span>
+                        <span class="label">Target user count:</span>
                         <span class="value">${config.target_count || 10}</span>
                     </div>
                 </div>
             </div>
             ${result.insights ? `
                 <div class="result-details">
-                    <h4>💡 执行洞察</h4>
+                    <h4>💡 Execution Insights</h4>
                     <div class="insights-content">
                         <p>${result.insights}</p>
                     </div>
@@ -510,7 +527,7 @@ function showResult(result, type) {
             ` : ''}
             ${result.recommendations ? `
                 <div class="result-details">
-                    <h4>📋 建议事项</h4>
+                    <h4>📋 Recommendations</h4>
                     <div class="recommendations-content">
                         <ul>
                             ${result.recommendations.map(rec => `<li>${rec}</li>`).join('')}
@@ -520,7 +537,7 @@ function showResult(result, type) {
             ` : ''}
             ${engagementData.raw ? `
                 <div class="result-details">
-                    <h4>📋 详细互动报告</h4>
+                    <h4>📋 Detailed Engagement Report</h4>
                     <div class="activity-content">
                         <pre>${engagementData.raw}</pre>
                     </div>
@@ -528,17 +545,17 @@ function showResult(result, type) {
             ` : ''}
             ${engagementData.tasks_output && engagementData.tasks_output.length > 0 ? `
                 <div class="result-details">
-                    <h4>📊 任务执行详情</h4>
+                    <h4>📊 Task Execution Details</h4>
                     <div class="tasks-content">
                         ${engagementData.tasks_output.map((task, index) => `
                             <div class="task-item">
-                                <h5>任务 ${index + 1}: ${task.agent || '未知代理'}</h5>
+                                <h5>Task ${index + 1}: ${task.agent || 'Unknown Agent'}</h5>
                                 <div class="task-description">
-                                    <strong>预期输出:</strong> ${task.expected_output || '未知'}
+                                    <strong>Expected Output:</strong> ${task.expected_output || 'Unknown'}
                                 </div>
                                 ${task.raw ? `
                                     <div class="task-output">
-                                        <strong>执行结果:</strong>
+                                        <strong>Execution Result:</strong>
                                         <pre>${task.raw}</pre>
                                     </div>
                                 ` : ''}
@@ -549,23 +566,23 @@ function showResult(result, type) {
             ` : ''}
             ${engagementData.token_usage ? `
                 <div class="result-details">
-                    <h4>📊 资源使用情况</h4>
+                    <h4>📊 Resource Usage</h4>
                     <div class="token-usage">
                         <div class="usage-grid">
                             <div class="usage-item">
-                                <span class="label">总Token数:</span>
+                                <span class="label">Total Tokens:</span>
                                 <span class="value">${engagementData.token_usage.total_tokens?.toLocaleString() || 0}</span>
                             </div>
                             <div class="usage-item">
-                                <span class="label">成功请求:</span>
+                                <span class="label">Successful Requests:</span>
                                 <span class="value">${engagementData.token_usage.successful_requests || 0}</span>
                             </div>
                             <div class="usage-item">
-                                <span class="label">提示Token:</span>
+                                <span class="label">Prompt Tokens:</span>
                                 <span class="value">${engagementData.token_usage.prompt_tokens?.toLocaleString() || 0}</span>
                             </div>
                             <div class="usage-item">
-                                <span class="label">完成Token:</span>
+                                <span class="label">Completion Tokens:</span>
                                 <span class="value">${engagementData.token_usage.completion_tokens?.toLocaleString() || 0}</span>
                             </div>
                         </div>
@@ -574,33 +591,33 @@ function showResult(result, type) {
             ` : ''}
         `;
     } else if (result.insights) {
-        // 用户分析结果
+        // User Analysis results
         const insights = result.insights;
         resultContent = `
             <div class="result-summary">
-                <h4>📊 分析摘要</h4>
+                <h4>📊 Analysis Summary</h4>
                 <div class="summary-grid">
                     <div class="summary-item">
-                        <span class="label">分析用户数:</span>
+                        <span class="label">Users Analyzed:</span>
                         <span class="value">${insights.total_users || 0}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">分析深度:</span>
-                        <span class="value">${insights.analysis_depth || '基础'}</span>
+                        <span class="label">Analysis depth:</span>
+                        <span class="value">${insights.analysis_depth || 'Basic'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">报告语言:</span>
-                        <span class="value">${insights.language === 'zh' ? '中文' : 'English'}</span>
+                        <span class="label">Report language:</span>
+                        <span class="value">${insights.language === 'zh' ? 'Chinese' : 'English'}</span>
                     </div>
                     <div class="summary-item">
-                        <span class="label">完成时间:</span>
-                        <span class="value">${insights.completion_time || '未知'}</span>
+                        <span class="label">Completion Time:</span>
+                        <span class="value">${insights.completion_time || 'Unknown'}</span>
                     </div>
                 </div>
             </div>
             ${insights.analysis_results ? `
                 <div class="result-details">
-                    <h4>📋 详细分析</h4>
+                    <h4>📋 Detailed Analysis</h4>
                     <div class="analysis-content">
                         ${formatAnalysisResults(insights.analysis_results)}
                     </div>
@@ -608,20 +625,20 @@ function showResult(result, type) {
             ` : ''}
         `;
     } else if (result.content) {
-        // 内容生成结果
+        // Content Generation results
         resultContent = `
             <div class="result-details">
-                <h4>✨ 生成的内容</h4>
+                <h4>✨ Generated Content</h4>
                 <div class="generated-content">
                     <pre>${result.content}</pre>
                 </div>
             </div>
         `;
     } else {
-        // 通用结果显示
+        // General result display
         resultContent = `
             <div class="result-details">
-                <h4>📋 执行结果</h4>
+                <h4>📋 Execution Result</h4>
                 <pre>${JSON.stringify(result, null, 2)}</pre>
             </div>
         `;
@@ -631,21 +648,21 @@ function showResult(result, type) {
         <div class="modal-overlay">
             <div class="modal result-modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">✅ 操作成功</h3>
+                    <h3 class="modal-title">✅ Operation Successful</h3>
                     <button class="close-btn">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="result-content">
                         <div class="basic-info">
-                            <p><strong>任务ID:</strong> <code>${result.task_id || '未知'}</code></p>
-                            <p><strong>状态:</strong> <span class="status-success">${result.status || '已提交'}</span></p>
-                            ${result.message ? `<p><strong>消息:</strong> ${result.message}</p>` : ''}
+                            <p><strong>Task ID:</strong> <code>${result.task_id || 'Unknown'}</code></p>
+                            <p><strong>Status:</strong> <span class="status-success">${result.status || 'Submitted'}</span></p>
+                            ${result.message ? `<p><strong>Message:</strong> ${result.message}</p>` : ''}
                         </div>
                         ${resultContent}
                     </div>
                     <div class="modal-actions">
-                        <button class="btn btn-secondary close-modal-btn">关闭</button>
-                        <button class="btn btn-primary copy-result-btn">复制结果</button>
+                        <button class="btn btn-secondary close-modal-btn">Close</button>
+                        <button class="btn btn-primary copy-result-btn">Copy Result</button>
                     </div>
                 </div>
             </div>
@@ -655,13 +672,13 @@ function showResult(result, type) {
     document.body.insertAdjacentHTML('beforeend', resultModal);
     currentModal = document.querySelector('.modal-overlay:last-child');
     
-    // 绑定所有关闭事件
+    // Bind all close events
     const closeBtn = currentModal.querySelector('.close-btn');
     const closeModalBtn = currentModal.querySelector('.close-modal-btn');
     const copyBtn = currentModal.querySelector('.copy-result-btn');
     const overlay = currentModal;
     
-    // 关闭按钮事件
+    // Close button event
     if (closeBtn) {
         closeBtn.addEventListener('click', closeModal);
     }
@@ -670,12 +687,12 @@ function showResult(result, type) {
         closeModalBtn.addEventListener('click', closeModal);
     }
     
-    // 复制按钮事件
+    // Copy button event
     if (copyBtn) {
         copyBtn.addEventListener('click', copyResultToClipboard);
     }
     
-    // 点击遮罩层关闭
+    // Click overlay to close
     overlay.addEventListener('click', function(e) {
         if (e.target === overlay) {
             closeModal();
@@ -683,7 +700,7 @@ function showResult(result, type) {
     });
 }
 
-// 格式化分析结果
+// Format analysis results
 function formatAnalysisResults(results) {
     if (typeof results === 'string') {
         return `<div class="analysis-text">${results}</div>`;
@@ -694,7 +711,7 @@ function formatAnalysisResults(results) {
     }
 }
 
-// 复制结果到剪贴板
+// Copy Result to clipboard
 function copyResultToClipboard() {
     const resultContent = currentModal.querySelector('.result-content');
     if (resultContent) {
@@ -703,13 +720,13 @@ function copyResultToClipboard() {
     }
 }
 
-// 显示错误
+// Show error
 function showError(message) {
     const errorModal = `
         <div class="modal-overlay">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">❌ 操作失败</h3>
+                    <h3 class="modal-title">❌ Operation failed</h3>
                     <button class="close-btn">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -717,7 +734,7 @@ function showError(message) {
                         <p style="color: #dc2626;">${message}</p>
                     </div>
                     <div style="margin-top: 1rem;">
-                        <button class="btn btn-secondary close-modal-btn">关闭</button>
+                        <button class="btn btn-secondary close-modal-btn">Close</button>
                     </div>
                 </div>
             </div>
@@ -727,7 +744,7 @@ function showError(message) {
     document.body.insertAdjacentHTML('beforeend', errorModal);
     currentModal = document.querySelector('.modal-overlay:last-child');
     
-    // 绑定关闭事件
+    // Bind close events
     const closeBtn = currentModal.querySelector('.close-btn');
     const closeModalBtn = currentModal.querySelector('.close-modal-btn');
     const overlay = currentModal;
@@ -740,7 +757,7 @@ function showError(message) {
         closeModalBtn.addEventListener('click', closeModal);
     }
     
-    // 点击遮罩层关闭
+    // Click overlay to close
     overlay.addEventListener('click', function(e) {
         if (e.target === overlay) {
             closeModal();
@@ -748,7 +765,7 @@ function showError(message) {
     });
 }
 
-// 工具函数：格式化数字
+// Utility function: Format number
 function formatNumber(num) {
     if (num >= 1000000) {
         return (num / 1000000).toFixed(1) + 'M';
@@ -758,17 +775,17 @@ function formatNumber(num) {
     return num.toString();
 }
 
-// 工具函数：复制到剪贴板
+// Utility function: Copy to clipboard
 async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
-        showNotification('已复制到剪贴板');
+        showNotification('Copied to clipboard');
     } catch (err) {
-        console.error('复制失败:', err);
+        console.error('Copy failed:', err);
     }
 }
 
-// 显示通知
+// Show notification
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -793,7 +810,7 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// 添加 CSS 动画
+// Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -821,7 +838,7 @@ style.textContent = `
         color: #dc2626;
     }
     
-    /* 结果模态框样式 */
+    /* Result modal styles */
     .result-modal {
         max-width: 800px;
         max-height: 90vh;
@@ -925,7 +942,7 @@ style.textContent = `
         min-width: 100px;
     }
     
-    /* 新增样式 */
+    /* New styles */
     .insights-content {
         background: #f0f9ff;
         border: 1px solid #0ea5e9;
@@ -986,7 +1003,7 @@ style.textContent = `
         color: #451a03;
     }
     
-    /* 新增任务详情样式 */
+    /* New task details styles */
     .tasks-content {
         background: #f8fafc;
         border: 1px solid #cbd5e1;

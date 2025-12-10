@@ -1,5 +1,5 @@
 
-# Dingo Marketing
+# Auto Marketer
 
 AI-powered marketing automation platform for GitHub-based projects.
 

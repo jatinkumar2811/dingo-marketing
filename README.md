@@ -1,6 +1,3 @@
-Here is the English translation of the **Dingo Marketing** project documentation.
-
------
 
 # Dingo Marketing
 
